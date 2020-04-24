@@ -64,6 +64,9 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.cropper-area {
+  width: 614px;
+}
 .preview-area {
   width: 307px;
 }
