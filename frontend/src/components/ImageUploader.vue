@@ -10,7 +10,7 @@
         type="file" 
         accept="image/*" 
         ref="file"
-        @change="setImage"
+        @change="setImageFromInput"
       >
     </div>
   </div>
@@ -28,21 +28,27 @@ export default {
     },
     dropEvent(event) {
       event.preventDefault();
-      console.log(event.dataTransfer.files);
-      console.log(event.dataTransfer.getData('text'));
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        this.setImage(files[0]);
+        return;
+      }
     },
     selecionarArquivo() {
       this.$refs.file.click();
     },
-    setImage(event) {
+    setImageFromInput(event) {
       const file = event.target.files[0];
+      this.setImage(file);
+    },
+    setImage(file) {
       if (file.type.indexOf('image/') === -1) {
         alert('O arquivo selecionado não é uma imagem');
         return;
       }
       if (typeof FileReader === 'function') {
         const reader = new FileReader();
-        reader.onload = ev => this.emitImageLoaded(ev.target.result);
+        reader.onload = event => this.emitImageLoaded(event.target.result);
         reader.readAsDataURL(file);
       } else {
         alert('FileReader API não suportada');
