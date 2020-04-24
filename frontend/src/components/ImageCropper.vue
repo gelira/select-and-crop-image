@@ -20,6 +20,11 @@
         >
           Reset
         </button>
+        <button
+          @click="cancel"
+        >
+          Cancel
+        </button>
       </div>
     </section>
     <section class="preview-area">
@@ -55,6 +60,9 @@ export default {
     reset() {
       this.$refs.cropper.reset();
     },
+    cancel() {
+      this.$emit('cropping-canceled');
+    }
   }
 }
 </script>
@@ -63,6 +71,9 @@ export default {
 .content {
   display: flex;
   justify-content: space-between;
+}
+.actions {
+  margin-top: 1rem;
 }
 .cropper-area {
   width: 614px;

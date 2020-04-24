@@ -61,6 +61,7 @@ export default {
       this.setImage(file);
     },
     setImage(file) {
+      this.$emit('selecting-image');
       if (file.type.indexOf('image/') === -1) {
         alert('O arquivo selecionado não é uma imagem');
         return;

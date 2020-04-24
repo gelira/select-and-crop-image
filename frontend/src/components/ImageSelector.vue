@@ -3,11 +3,13 @@
     <ImageUploader 
       v-show="showUploader"
       @image-loaded="imageLoaded"
+      @selecting-image="emitCleanImageSelected"
     />
     <ImageCropper
       v-if="showCropper"
       :img-src="imgSrc" 
       @image-cropped="imageCropped"
+      @cropping-canceled="croppingCanceled"
     />
   </div>
 </template>
@@ -39,6 +41,14 @@ export default {
       this.showUploader = true;
       this.showCropper = false;
       this.$emit('image-selected', event);
+    },
+    croppingCanceled() {
+      this.showUploader = true;
+      this.showCropper = false;
+      this.emitCleanImageSelected();
+    },
+    emitCleanImageSelected() {
+      this.$emit('clean-image-selected');
     }
   }
 }

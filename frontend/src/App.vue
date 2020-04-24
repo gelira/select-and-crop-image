@@ -2,6 +2,7 @@
   <div>
     <ImageSelector 
       @image-selected="imageSelected"
+      @clean-image-selected="cleanImageSelected"
     />
     <div v-if="imageSrc !== ''">
       <p>Imagem cortada</p>
@@ -27,6 +28,9 @@ export default {
   methods: {
     imageSelected(event) {
       this.imageSrc = event;
+    },
+    cleanImageSelected() {
+      this.imageSrc = '';
     }
   }
 }
