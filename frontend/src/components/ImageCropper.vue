@@ -50,7 +50,7 @@ export default {
   methods: {
     cropImage() {
       const cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-      this.$emit('cropped-image', cropImg);
+      this.$emit('image-cropped', cropImg);
     },
     reset() {
       this.$refs.cropper.reset();

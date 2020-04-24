@@ -7,7 +7,7 @@
     <ImageCropper
       v-if="showCropper"
       :img-src="imgSrc" 
-      @cropped-image="cropped"
+      @image-cropped="imageCropped"
     />
   </div>
 </template>
@@ -35,10 +35,10 @@ export default {
       this.showUploader = false;
       this.showCropper = true;
     },
-    cropped(event) {
+    imageCropped(event) {
       this.showUploader = true;
       this.showCropper = false;
-      this.$emit('image-cropped', event);
+      this.$emit('image-selected', event);
     }
   }
 }

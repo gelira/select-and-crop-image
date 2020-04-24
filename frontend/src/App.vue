@@ -1,11 +1,11 @@
 <template>
   <div>
     <ImageSelector 
-      @image-cropped="cropped"
+      @image-selected="imageSelected"
     />
-    <div v-if="croppedSrc !== ''">
+    <div v-if="imageSrc !== ''">
       <p>Imagem cortada</p>
-      <img :src="croppedSrc" />
+      <img :src="imageSrc" />
     </div>
   </div>
 </template>
@@ -21,12 +21,12 @@ export default {
   data() {
     return {
       msg: 'Hello World!!',
-      croppedSrc: ''
+      imageSrc: ''
     };
   },
   methods: {
-    cropped(event) {
-      this.croppedSrc = event;
+    imageSelected(event) {
+      this.imageSrc = event;
     }
   }
 }
