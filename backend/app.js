@@ -8,12 +8,19 @@ app.use(express.json());
 
 app.post('/baixar-foto', async (req, res) => {
   const { link } = req.body;
-  
-  const response = await axios.get(link, { responseType: 'arraybuffer' });
-  const buf = Buffer.from(response.data).toString('base64');
-  const contentType = response.headers['content-type'];
-
-  return res.json({ src: `data:${contentType};base64,${buf}` });
+  try {
+    const response = await axios.get(link, { responseType: 'arraybuffer' });
+    const contentType = response.headers['content-type'];
+    console.log(contentType);
+    if (contentType.indexOf('image/') === -1) {
+      return res.status(400).json({ message: 'O link não aponta para uma imagem' });
+    }
+    const buf = Buffer.from(response.data).toString('base64');
+    return res.json({ src: `data:${contentType};base64,${buf}` });
+  }
+  catch {
+    return res.status(400).json({ message: 'Erro no download do arquivo' });
+  }
 });
 
 app.listen(3333);
