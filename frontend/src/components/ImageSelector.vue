@@ -4,21 +4,28 @@
       v-show="showUploader"
       @image-loaded="imageLoaded"
     />
-    <img ref="img" :src="imgSrc" v-show="!showUploader">
+    <ImageCropper
+      v-if="showCropper"
+      :img-src="imgSrc" 
+      @cropped-image="cropped"
+    />
   </div>
 </template>
 
 <script>
 import ImageUploader from './ImageUploader';
+import ImageCropper from './ImageCropper';
 
 export default {
   name: 'ImageSelector',
   components: {
-    ImageUploader
+    ImageUploader,
+    ImageCropper
   },
   data() {
     return {
       showUploader: true,
+      showCropper: false,
       imgSrc: ''
     };
   },
@@ -26,6 +33,12 @@ export default {
     imageLoaded(event) {
       this.imgSrc = event;
       this.showUploader = false;
+      this.showCropper = true;
+    },
+    cropped(event) {
+      this.showUploader = true;
+      this.showCropper = false;
+      this.$emit('image-cropped', event);
     }
   }
 }

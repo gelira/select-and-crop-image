@@ -1,7 +1,12 @@
 <template>
   <div>
-    <h1>{{ msg }}</h1>
-    <ImageSelector />
+    <ImageSelector 
+      @image-cropped="cropped"
+    />
+    <div v-if="croppedSrc !== ''">
+      <p>Imagem cortada</p>
+      <img :src="croppedSrc" />
+    </div>
   </div>
 </template>
 
@@ -15,8 +20,14 @@ export default {
   },
   data() {
     return {
-      msg: 'Hello World!!'
+      msg: 'Hello World!!',
+      croppedSrc: ''
     };
+  },
+  methods: {
+    cropped(event) {
+      this.croppedSrc = event;
+    }
   }
 }
 </script>
