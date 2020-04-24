@@ -5,7 +5,10 @@
       @drop="dropEvent" 
       @dragover="allowDrop"
     >
-      <p>Arraste e solte aqui ou <button @click="selecionarArquivo">Selecione uma foto</button></p>
+      <p v-show="loading">Carregando ...</p>
+      <p v-show="!loading">
+        Arraste e solte aqui ou <button @click="selecionarArquivo">Selecione uma foto</button>
+      </p>
       <input
         type="file" 
         accept="image/*" 
@@ -17,21 +20,37 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: 'ImageCropper',
+  name: 'ImageUploader',
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
   methods: {
     allowDrop(event) {
       event.preventDefault();
     },
-    dropEvent(event) {
+    async dropEvent(event) {
       event.preventDefault();
       const files = event.dataTransfer.files;
       if (files.length > 0) {
         this.setImage(files[0]);
         return;
+      }
+      const link = event.dataTransfer.getData('text');
+      try {
+        this.loading = true;
+        const response = await axios.post('http://localhost:3333/baixar-foto', { link });
+        this.emitImageLoaded(response.data.src);
+      }
+      catch (error) {
+        alert(error.response.data.message);
+      }
+      finally {
+        this.loading = false;
       }
     },
     selecionarArquivo() {
