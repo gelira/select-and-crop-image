@@ -6,9 +6,19 @@
       @dragover="allowDrop"
     >
       <p v-show="loading">Carregando ...</p>
-      <p v-show="!loading">
-        Arraste e solte aqui ou <button @click="selecionarArquivo">Selecione uma foto</button>
-      </p>
+      <div v-show="!loading">
+        <p>
+          Arraste e solte aqui
+        </p>
+        <p>
+          Ou <button @click="selecionarArquivo">Selecione uma foto</button>
+        </p>
+        <p>
+          Ou informe o link aqui: 
+          <input type="text" ref="link">
+          <button @click="baixarFoto">Baixar</button>
+        </p>
+      </div>
       <input
         type="file" 
         accept="image/*" 
@@ -41,17 +51,7 @@ export default {
         return;
       }
       const link = event.dataTransfer.getData('text');
-      try {
-        this.loading = true;
-        const response = await axios.post('http://localhost:3333/baixar-foto', { link });
-        this.emitImageLoaded(response.data.src);
-      }
-      catch (error) {
-        alert(error.response.data.message);
-      }
-      finally {
-        this.loading = false;
-      }
+      await this.buscarBackend(link);
     },
     selecionarArquivo() {
       this.$refs.file.click();
@@ -76,6 +76,24 @@ export default {
     },
     emitImageLoaded(data) {
       this.$emit('image-loaded', data);
+    },
+    async baixarFoto() {
+      const link = this.$refs.link.value;
+      this.$refs.link.value = '';
+      await this.buscarBackend(link);
+    },
+    async buscarBackend(link) {
+      try {
+        this.loading = true;
+        const response = await axios.post('http://localhost:3333/baixar-foto', { link });
+        this.emitImageLoaded(response.data.src);
+      }
+      catch (error) {
+        alert(error.response.data.message);
+      }
+      finally {
+        this.loading = false;
+      }
     }
   }
 }
