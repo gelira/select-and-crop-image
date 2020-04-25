@@ -2,8 +2,8 @@
   <div>
     <div
       class="uploader"
-      @drop="dropEvent" 
-      @dragover="allowDrop"
+      @drop="handleDrop" 
+      @dragover="handleDragover"
     >
       <p v-show="loading">Carregando ...</p>
       <div v-show="!loading">
@@ -11,19 +11,19 @@
           Arraste e solte aqui
         </p>
         <p>
-          Ou <button @click="selecionarArquivo">Selecione uma foto</button>
+          Ou <button @click="triggerFileInputClick">Selecione uma foto</button>
         </p>
         <p>
           Ou informe o link aqui: 
           <input type="text" ref="link">
-          <button @click="baixarFoto">Baixar</button>
+          <button @click="handleBuscarButtonClick">Buscar</button>
         </p>
       </div>
       <input
         type="file" 
         accept="image/*" 
         ref="file"
-        @change="setImageFromInput"
+        @change="handleFileInputChange"
       >
     </div>
   </div>
@@ -40,28 +40,8 @@ export default {
     };
   },
   methods: {
-    allowDrop(event) {
-      event.preventDefault();
-    },
-    async dropEvent(event) {
-      event.preventDefault();
-      const files = event.dataTransfer.files;
-      if (files.length > 0) {
-        this.setImage(files[0]);
-        return;
-      }
-      const link = event.dataTransfer.getData('text');
-      await this.buscarBackend(link);
-    },
-    selecionarArquivo() {
-      this.$refs.file.click();
-    },
-    setImageFromInput(event) {
-      const file = event.target.files[0];
-      this.setImage(file);
-    },
     setImage(file) {
-      this.$emit('selecting-image');
+      this.emitSelectingImage();
       if (file.type.indexOf('image/') === -1) {
         alert('O arquivo selecionado não é uma imagem');
         return;
@@ -73,14 +53,6 @@ export default {
       } else {
         alert('FileReader API não suportada');
       }
-    },
-    emitImageLoaded(data) {
-      this.$emit('image-loaded', data);
-    },
-    async baixarFoto() {
-      const link = this.$refs.link.value;
-      this.$refs.link.value = '';
-      await this.buscarBackend(link);
     },
     async buscarBackend(link) {
       try {
@@ -94,13 +66,48 @@ export default {
       finally {
         this.loading = false;
       }
+    },
+    // events
+    handleDragover(event) {
+      event.preventDefault();
+    },
+    async handleDrop(event) {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        this.setImage(files[0]);
+        return;
+      }
+      const link = event.dataTransfer.getData('text');
+      await this.buscarBackend(link);
+    },
+    handleFileInputChange(event) {
+      const file = event.target.files[0];
+      this.setImage(file);
+    },
+    triggerFileInputClick() {
+      this.$refs.file.click();
+    },
+    async handleBuscarButtonClick() {
+      const link = this.$refs.link.value;
+      this.$refs.link.value = '';
+      if (link === '') {
+        return;
+      }
+      await this.buscarBackend(link);
+    },
+    emitImageLoaded(data) {
+      this.$emit('image-loaded', data);
+    },
+    emitSelectingImage() {
+      this.$emit('selecting-image');
     }
   }
 }
 </script>
 
 <style scoped>
-input[type="file"] {
+input[type='file'] {
   display: none;
 }
 
