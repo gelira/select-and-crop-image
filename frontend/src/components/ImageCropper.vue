@@ -12,17 +12,17 @@
       </div>
       <div class="actions">
         <button
-          @click="cropImage"
+          @click="handleCropButtonClick"
         >
           Crop
         </button>
         <button
-          @click="reset"
+          @click="handleResetButtonClick"
         >
           Reset
         </button>
         <button
-          @click="cancel"
+          @click="handleCancelButtonClick"
         >
           Cancel
         </button>
@@ -54,15 +54,25 @@ export default {
     return {};
   },
   methods: {
-    cropImage() {
+    // events
+    handleCropButtonClick() {
       const cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-      this.$emit('image-cropped', cropImg);
+      this.emitImageCropped(cropImg);
     },
-    reset() {
-      this.$refs.cropper.reset();
+    handleResetButtonClick() {
+      this.triggerCropperRefReset();
     },
-    cancel() {
+    handleCancelButtonClick() {
+      this.emitCroppingCanceled();
+    },
+    emitImageCropped(data) {
+      this.$emit('image-cropped', data);
+    },
+    emitCroppingCanceled() {
       this.$emit('cropping-canceled');
+    },
+    triggerCropperRefReset() {
+      this.$refs.cropper.reset();
     }
   }
 }
@@ -71,7 +81,7 @@ export default {
 <style scoped>
 .content {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .actions {
   margin-top: 1rem;

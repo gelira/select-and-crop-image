@@ -2,14 +2,14 @@
   <div>
     <ImageUploader 
       v-show="showUploader"
-      @image-loaded="imageLoaded"
+      @image-loaded="handleImageLoaded"
       @selecting-image="emitCleanImageSelected"
     />
     <ImageCropper
       v-if="showCropper"
       :img-src="imgSrc" 
-      @image-cropped="imageCropped"
-      @cropping-canceled="croppingCanceled"
+      @image-cropped="handleImageCropped"
+      @cropping-canceled="handleCroppingCanceled"
     />
   </div>
 </template>
@@ -32,23 +32,27 @@ export default {
     };
   },
   methods: {
-    imageLoaded(event) {
+    // events
+    handleImageLoaded(event) {
       this.imgSrc = event;
       this.showUploader = false;
       this.showCropper = true;
     },
-    imageCropped(event) {
+    handleImageCropped(event) {
       this.showUploader = true;
       this.showCropper = false;
-      this.$emit('image-selected', event);
+      this.emitImageSelected(event);
     },
-    croppingCanceled() {
+    handleCroppingCanceled() {
       this.showUploader = true;
       this.showCropper = false;
       this.emitCleanImageSelected();
     },
     emitCleanImageSelected() {
       this.$emit('clean-image-selected');
+    },
+    emitImageSelected(data) {
+      this.$emit('image-selected', data);
     }
   }
 }

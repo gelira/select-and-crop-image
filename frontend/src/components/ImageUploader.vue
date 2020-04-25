@@ -11,7 +11,7 @@
           Arraste e solte aqui
         </p>
         <p>
-          Ou <button @click="triggerFileInputClick">Selecione uma foto</button>
+          Ou <button @click="handleSelecionarButtonClick">Selecione uma foto</button>
         </p>
         <p>
           Ou informe o link aqui: 
@@ -85,6 +85,9 @@ export default {
     handleFileInputChange(event) {
       const file = event.target.files[0];
       this.setImage(file);
+    },
+    handleSelecionarButtonClick() {
+      this.triggerFileInputClick();
     },
     triggerFileInputClick() {
       this.$refs.file.click();
