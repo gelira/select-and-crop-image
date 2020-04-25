@@ -5,6 +5,7 @@
         <vue-cropper
           ref="cropper"
           :aspect-ratio="1"
+          :view-mode="2"
           :src="imgSrc"
           preview=".preview"
         />
