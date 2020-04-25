@@ -55,6 +55,7 @@ export default {
       }
     },
     async buscarBackend(link) {
+      this.emitSelectingImage();
       try {
         this.loading = true;
         const response = await axios.post('http://localhost:3333/baixar-foto', { link });
