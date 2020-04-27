@@ -39,7 +39,18 @@ export default {
       loading: false
     };
   },
+  mounted() {
+    window.addEventListener('paste', this.pasteListener);
+  },
+  beforeDestroy() {
+    window.removeEventListener('paste', this.pasteListener);
+  },
   methods: {
+    pasteListener(event) {
+      if (event.clipboardData.files.length > 0) {
+        this.setImage(event.clipboardData.files[0]);
+      }
+    },
     setImage(file) {
       this.emitSelectingImage();
       if (file.type.indexOf('image/') === -1) {
