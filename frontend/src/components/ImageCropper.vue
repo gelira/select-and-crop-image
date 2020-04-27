@@ -7,6 +7,7 @@
           :aspect-ratio="1"
           :view-mode="2"
           :src="imgSrc"
+          :img-style="imgStyle"
           preview=".preview"
         />
       </div>
@@ -32,6 +33,7 @@
       <p>Preview</p>
       <div class="preview" />
     </section>
+    <img ref="imgHidden" :src="imgSrc" class="img-hidden">
   </div>
 </template>
 
@@ -51,7 +53,22 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      imgWidth: 0,
+      imgHeight: 0
+    };
+  },
+  mounted() {
+    this.imgWidth = this.$refs.imgHidden.width;
+    this.imgHeight = this.$refs.imgHidden.height;
+  },
+  computed: {
+    imgStyle() {
+      if (this.imgHeight > this.imgWidth) {
+        return {'max-width': '614px'};
+      }
+      return {'max-height': '614px'};
+    }
   },
   methods: {
     // events
@@ -96,5 +113,8 @@ export default {
   width: 100%;
   height: calc(372px * (9 / 16));
   overflow: hidden;
+}
+.img-hidden {
+  display: none;
 }
 </style>
